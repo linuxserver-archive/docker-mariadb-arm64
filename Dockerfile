@@ -1,4 +1,4 @@
-FROM lsiobase/xenial.arm64
+FROM lsiobase/ubuntu.arm64:xenial
 
 # set version label
 ARG BUILD_DATE
