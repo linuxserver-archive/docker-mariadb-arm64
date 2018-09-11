@@ -1,4 +1,4 @@
-FROM lsiobase/ubuntu.arm64:xenial
+FROM lsiobase/ubuntu.arm64:bionic
 
 # set version label
 ARG BUILD_DATE
@@ -12,7 +12,18 @@ ENV MYSQL_DIR="/config"
 ENV DATADIR=$MYSQL_DIR/databases
 
 RUN \
- echo "**** install packages ****" && \
+ echo "**** install gnupg ****" && \
+ apt-get update && \
+ apt-get install -y \
+	gnupg && \
+ echo "add mariadb repository ****" && \
+ echo "(redundant on armhf platform, but added for consistent dockerfile on all platforms) ****" && \
+ apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 && \
+ echo "deb http://mirror.sax.uk.as61049.net/mariadb/repo/10.3/ubuntu bionic main" >> \
+	/etc/apt/sources.list.d/mariadb.list && \
+ echo "deb-src http://mirror.sax.uk.as61049.net/mariadb/repo/10.3/ubuntu bionic main" >> \
+	/etc/apt/sources.list.d/mariadb.list && \
+ echo "**** install runtime packages ****" && \
  apt-get update && \
  apt-get install -y \
 	mariadb-server && \
